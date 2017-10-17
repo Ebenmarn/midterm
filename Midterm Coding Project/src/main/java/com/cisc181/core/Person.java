@@ -61,7 +61,17 @@ public abstract class Person implements java.io.Serializable {
 	}
 
 	public void setPhone(String newPhone_number) {
+		String regex = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$";
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(newPhone_number);
+		
+		if (matcher.matches() != true) {
+			
+			throw new PersonException(this);
+			
+		}
 		phone_number = newPhone_number;
+
 	
 	}
 
@@ -115,12 +125,13 @@ public abstract class Person implements java.io.Serializable {
 		Calendar birthDate = Calendar.getInstance();
 
 		int age = 0;
+		it x;
 		birthDate.setTime(this.DOB);
 		if (birthDate.after(today)) {
 			throw new IllegalArgumentException("Can't be born in the future");
 		}
-		age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
-
+		x = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR)
+		age =(x<100) ? x : throw new PersonException(this);
 		// If birth date is greater than todays date (after 2 days adjustment of
 		// leap year) then decrement age one year
 		if ((birthDate.get(Calendar.DAY_OF_YEAR)
@@ -137,6 +148,8 @@ public abstract class Person implements java.io.Serializable {
 		}
 
 		System.out.println("age is " + age);
+		
+		
 
 		return age;
 
